@@ -4,13 +4,11 @@ on: push
 jobs:
   mon_job:
     runs-on: ubuntu-latest
+    container: redis-cli
     services:
       redis:
         image: redis
     steps:
-    - name: Installer redis-cli
-      run: sudo apt-get update && sudo apt-get install -y redis-tools
-      
     - name: vérifier la connexion à Redis
       run: |
         echo "En attente de 5 secondes pour s'assurer que Redis est en cours d'exécution..."
