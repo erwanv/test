@@ -1,21 +1,52 @@
- # .github/workflows/exemple_mappage_ports.yml
-name: exemple de mappage de ports Redis
-on: push
+ name: partager des données entre les jobs
+
+on: [push]
 
 jobs:
-  mon_job:
+  job_1:
+    name: ajouter 3 et 7
     runs-on: ubuntu-latest
-    services:
-      redis:
-        image: redis
-        ports:
-          - 6379:6379
     steps:
-    - name: Installer redis-cli
-      run: sudo apt-get update && sudo apt-get install -y redis-tools
-      
-    - name: vérifier la connexion à Redis sur le port mappé
-      run: |
-        echo "Vérification de la connexion à Redis sur le port 6379..."
-        redis-cli -h localhost -p 6379 ping
+      - shell: bash
+        run: |
+          expr 3 + 7 > math-homework.txt
+      - name: charger le résultat mathématique pour job 1
+        uses: actions/upload-artifact@v3
+        with:
+          name: devoirs
+          path: math-homework.txt
+
+  job_2:
+    name: multiplier par 9
+    needs: job_1
+    runs-on: windows-latest
+    steps:
+      - name: télécharger le résultat mathématique pour job 1
+        uses: actions/download-artifact@v3
+        with:
+          name: devoirs
+      - shell: bash
+        run: |
+          valeur=`cat math-homework.txt`
+          expr $valeur \* 9 > math-homework.txt
+      - name: charger le résultat mathématique pour job 2
+        uses: actions/upload-artifact@v3
+        with:
+          name: devoirs
+          path: math-homework.txt
+
+  job_3:
+    name: afficher les résultats
+    needs: job_2
+    runs-on: macOS-latest
+    steps:
+      - name: télécharger le résultat mathématique pour job 2
+        uses: actions/download-artifact@v3
+        with:
+          name: devoirs
+      - name: imprimer le résultat final
+        shell: bash
+        run: |
+          valeur=`cat math-homework.txt`
+          echo le résultat est $valeur
  
