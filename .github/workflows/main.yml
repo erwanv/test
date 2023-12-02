@@ -1,4 +1,4 @@
- name: partager des données entre les jobs
+name: partager des données entre les jobs
 
 on: [push]
 
