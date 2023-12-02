@@ -3,50 +3,12 @@ name: partager des données entre les jobs
 on: [push]
 
 jobs:
-  job_1:
-    name: ajouter 3 et 7
+  afficher_resume:
     runs-on: ubuntu-latest
     steps:
-      - shell: bash
-        run: |
-          expr 3 + 7 > math-homework.txt
-      - name: charger le résultat mathématique pour job 1
-        uses: actions/upload-artifact@v3
-        with:
-          name: devoirs
-          path: math-homework.txt
-
-  job_2:
-    name: multiplier par 9
-    needs: job_1
-    runs-on: windows-latest
-    steps:
-      - name: télécharger le résultat mathématique pour job 1
-        uses: actions/download-artifact@v3
-        with:
-          name: devoirs
-      - shell: bash
-        run: |
-          valeur=`cat math-homework.txt`
-          expr $valeur \* 9 > math-homework.txt
-      - name: charger le résultat mathématique pour job 2
-        uses: actions/upload-artifact@v3
-        with:
-          name: devoirs
-          path: math-homework.txt
-
-  job_3:
-    name: afficher les résultats
-    needs: job_2
-    runs-on: macOS-latest
-    steps:
-      - name: télécharger le résultat mathématique pour job 2
-        uses: actions/download-artifact@v3
-        with:
-          name: devoirs
-      - name: imprimer le résultat final
-        shell: bash
-        run: |
-          valeur=`cat math-homework.txt`
-          echo le résultat est $valeur
+    - name: Résumé simple
+      run: |
+        echo "### Bonjour tout le monde ! :rocket:" >> $GITHUB_STEP_SUMMARY
+    - name: Attendre pour visualiser le résumé
+      run: sleep 5
  
