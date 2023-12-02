@@ -4,7 +4,7 @@ on: push
 jobs:
   mon_job:
     runs-on: ubuntu-latest
-    container: redis-cli
+    container: redis/redis-stack
     services:
       redis:
         image: redis
